@@ -8,7 +8,7 @@ import java.sql.Clob;
 import java.sql.NClob;
 import java.sql.SQLException;
 
-public class SimpleNCLob extends SimpleClob implements NClob {
+class SimpleNCLob extends SimpleClob implements NClob {
 
 	@Override
 	public long length() throws SQLException {

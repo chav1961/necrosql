@@ -23,16 +23,20 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
+import chav1961.necrosql.interfaces.LowLayerInterface;
+
 class SimpleConnection implements Connection {
-	private final File			root;
-	private final Properties	props;
+	private final File				root;
+	private final Properties		props;
+	private final LowLayerInterface	lli;
 	
-	private SQLWarning			warningChain = null;
-	private boolean				autoCommit = true, isClosed = false, isReadOnly;
+	private SQLWarning				warningChain = null;
+	private boolean					autoCommit = true, isClosed = false, isReadOnly;
 	
 	SimpleConnection(File dirLocated, Properties toCall) throws SQLException {
 		this.root = dirLocated;
 		this.props = (Properties) toCall.clone();
+		this.lli = null;
 		
 		if (!root.exists() || !root.isDirectory() || !root.canRead()) {
 			throw new SQLException("Database location ["+root.getAbsolutePath()+"] is not exists, is not a directory or is not accessible"); 
@@ -110,7 +114,7 @@ class SimpleConnection implements Connection {
 
 	@Override
 	public DatabaseMetaData getMetaData() throws SQLException {
-		return new SimpleMetaData(root,this);
+		return new SimpleMetaData(root,this,lli);
 	}
 
 	@Override
